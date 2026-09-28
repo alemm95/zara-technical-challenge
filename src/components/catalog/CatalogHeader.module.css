@@ -10,6 +10,17 @@
   background: #ffffff;
 }
 
+.header::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 80px;
+  display: none;
+  height: 1px;
+  background: #000000;
+  content: "";
+}
+
 .brand,
 .cartLink {
   display: inline-flex;
@@ -66,6 +77,10 @@
 }
 
 @media (min-width: 1280px) {
+  .header::after {
+    display: block;
+  }
+
   .header {
     padding-inline: 100px;
   }

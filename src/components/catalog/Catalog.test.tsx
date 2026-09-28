@@ -4,6 +4,7 @@ import { delay, HttpResponse, http } from "msw";
 import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
 import { axe } from "vitest-axe";
+import { CartProvider } from "@/context/CartContext";
 import { server } from "@/test/server";
 import type { ProductSummary } from "@/types/product";
 import { Catalog } from "./Catalog";
@@ -24,11 +25,20 @@ const secondPhone: ProductSummary = {
   imageUrl: "https://phones.example.test/images/APL-I15P.webp",
 };
 
+function renderCatalog(
+  initialProducts: ProductSummary[],
+  initialError: boolean,
+) {
+  return render(
+    <CartProvider>
+      <Catalog initialProducts={initialProducts} initialError={initialError} />
+    </CartProvider>,
+  );
+}
+
 describe("Catalog", () => {
   it("renders the initial catalog and has no detected accessibility violations", async () => {
-    const { container } = render(
-      <Catalog initialProducts={[firstPhone]} initialError={false} />,
-    );
+    const { container } = renderCatalog([firstPhone], false);
 
     expect(screen.getByText("1 RESULTS")).toBeInTheDocument();
     expect(
@@ -60,7 +70,7 @@ describe("Catalog", () => {
       }),
     );
 
-    render(<Catalog initialProducts={[firstPhone]} initialError={false} />);
+    renderCatalog([firstPhone], false);
     await user.type(
       screen.getByRole("textbox", {
         name: "Search for a smartphone by name or brand",
@@ -78,7 +88,7 @@ describe("Catalog", () => {
 
   it("clears the search using the external clear button", async () => {
     const user = userEvent.setup();
-    render(<Catalog initialProducts={[firstPhone]} initialError={false} />);
+    renderCatalog([firstPhone], false);
 
     const searchInput = screen.getByRole("textbox", {
       name: "Search for a smartphone by name or brand",
@@ -101,7 +111,7 @@ describe("Catalog", () => {
       }),
     );
 
-    render(<Catalog initialProducts={[firstPhone]} initialError={false} />);
+    renderCatalog([firstPhone], false);
     await user.type(
       screen.getByRole("textbox", {
         name: "Search for a smartphone by name or brand",
@@ -127,7 +137,9 @@ describe("Catalog", () => {
 
     render(
       <StrictMode>
-        <Catalog initialProducts={[]} initialError />
+        <CartProvider>
+          <Catalog initialProducts={[]} initialError />
+        </CartProvider>
       </StrictMode>,
     );
     expect(
@@ -155,7 +167,7 @@ describe("Catalog", () => {
       ),
     );
 
-    render(<Catalog initialProducts={[firstPhone]} initialError={false} />);
+    renderCatalog([firstPhone], false);
     await user.type(
       screen.getByRole("textbox", {
         name: "Search for a smartphone by name or brand",
@@ -176,7 +188,7 @@ describe("Catalog", () => {
       ),
     );
 
-    render(<Catalog initialProducts={[firstPhone]} initialError={false} />);
+    renderCatalog([firstPhone], false);
     await user.type(
       screen.getByRole("textbox", {
         name: "Search for a smartphone by name or brand",

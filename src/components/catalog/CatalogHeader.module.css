@@ -3,9 +3,10 @@
   top: 0;
   z-index: 10;
   display: flex;
-  height: 80px;
+  height: var(--header-height);
   align-items: center;
   justify-content: space-between;
+  padding-inline: 16px;
   background: #ffffff;
 }
 
@@ -56,6 +57,27 @@
 .cartLink img {
   width: 17px;
   height: 17px;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding-inline: 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .header {
+    padding-inline: 100px;
+  }
+}
+
+.cartCount {
+  min-width: 2ch;
+  text-align: right;
+}
+
+.cartCount[data-hydrated="false"] {
+  visibility: hidden;
 }
 
 .brand:focus-visible,

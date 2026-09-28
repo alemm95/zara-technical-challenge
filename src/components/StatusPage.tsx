@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import styles from "./StatusPage.module.css";
 
+// Styles live in globals.css: a CSS module here would be preloaded on every
+// page through error.tsx/not-found.tsx and trigger an unused-preload warning.
 interface StatusPageProps {
   title: string;
   message: string;
@@ -10,9 +11,9 @@ interface StatusPageProps {
 
 export function StatusPage({ title, message, children }: StatusPageProps) {
   return (
-    <main className={styles.page}>
-      <h1 className={styles.title}>{title}</h1>
-      <p className={styles.message}>{message}</p>
+    <main className="status-page">
+      <h1 className="status-title">{title}</h1>
+      <p className="status-message">{message}</p>
       {children}
     </main>
   );
@@ -26,7 +27,7 @@ export function StatusButton({
   onClick: () => void;
 }) {
   return (
-    <button className={styles.action} onClick={onClick} type="button">
+    <button className="status-action" onClick={onClick} type="button">
       {children}
     </button>
   );
@@ -40,7 +41,7 @@ export function StatusLink({
   href: string;
 }) {
   return (
-    <Link className={styles.action} href={href}>
+    <Link className="status-action" href={href}>
       {children}
     </Link>
   );

@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [main, develop]
   pull_request:
 
 jobs:
@@ -22,6 +23,9 @@ jobs:
 
       - name: Check formatting and lint
         run: npm run check
+
+      - name: Typecheck
+        run: npm run typecheck
 
       - name: Run unit tests
         run: npm test

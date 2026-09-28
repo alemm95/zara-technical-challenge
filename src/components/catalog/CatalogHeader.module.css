@@ -1,13 +1,17 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  display: flex;
+  z-index: var(--z-header);
   height: var(--header-height);
+  padding-inline: var(--page-gutter);
+  background: var(--background);
+}
+
+.nav {
+  display: flex;
+  height: 100%;
   align-items: center;
   justify-content: space-between;
-  padding-inline: 16px;
-  background: var(--background);
 }
 
 .header::after {
@@ -77,19 +81,9 @@
   height: 18px;
 }
 
-@media (min-width: 768px) {
-  .header {
-    padding-inline: 40px;
-  }
-}
-
-@media (min-width: 1280px) {
+@media (--desktop) {
   .header::after {
     display: block;
-  }
-
-  .header {
-    padding-inline: 100px;
   }
 }
 

@@ -1,5 +1,9 @@
-import { ProductDetailLoading } from "@/components/product-detail/ProductDetailLoading";
+import { LoadingBar } from "@/components/LoadingBar";
 
 export default function Loading() {
-  return <ProductDetailLoading />;
+  return (
+    <main aria-busy="true">
+      <LoadingBar label="Loading product details" />
+    </main>
+  );
 }

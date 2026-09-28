@@ -3,40 +3,47 @@
 import { useEffect, useRef, useState } from "react";
 import type { ProductSummary } from "@/types/product";
 import { isProductListResponse } from "@/types/productGuards";
+import {
+  buildCatalogHref,
+  normalizeCatalogSearch,
+} from "@/utils/catalogSearch";
 import styles from "./Catalog.module.css";
 import { type CatalogRequestState, CatalogResults } from "./CatalogResults";
 import { CatalogSearch } from "./CatalogSearch";
 
+const SEARCH_DEBOUNCE_MS = 280;
+
 interface CatalogProps {
   initialProducts: ProductSummary[];
-  initialError: boolean;
+  initialSearch?: string;
 }
 
-export function Catalog({ initialProducts, initialError }: CatalogProps) {
-  const [query, setQuery] = useState("");
+export function Catalog({ initialProducts, initialSearch = "" }: CatalogProps) {
+  const startingSearch = normalizeCatalogSearch(initialSearch);
+  const [query, setQuery] = useState(startingSearch);
   const [products, setProducts] = useState(initialProducts);
+  const [resultsSearch, setResultsSearch] = useState(startingSearch);
   const [count, setCount] = useState(initialProducts.length);
-  const [requestState, setRequestState] = useState<CatalogRequestState>(
-    initialError ? "error" : "idle",
-  );
+  const [requestState, setRequestState] = useState<CatalogRequestState>("idle");
   const [retryCount, setRetryCount] = useState(0);
-  const lastRequestKey = useRef(JSON.stringify([query, retryCount]));
+  const lastRequestKey = useRef(JSON.stringify([startingSearch, 0]));
 
   useEffect(() => {
-    const requestKey = JSON.stringify([query, retryCount]);
+    const term = normalizeCatalogSearch(query);
+    const requestKey = JSON.stringify([term, retryCount]);
     if (lastRequestKey.current === requestKey) {
       return;
     }
 
     lastRequestKey.current = requestKey;
     const controller = new AbortController();
-    const normalizedQuery = query.trim();
     const timeoutId = window.setTimeout(async () => {
+      window.history.replaceState(null, "", buildCatalogHref(term));
       setRequestState("loading");
       const searchParams = new URLSearchParams({ limit: "20", offset: "0" });
 
-      if (normalizedQuery) {
-        searchParams.set("search", normalizedQuery);
+      if (term) {
+        searchParams.set("search", term);
       }
 
       try {
@@ -57,6 +64,7 @@ export function Catalog({ initialProducts, initialError }: CatalogProps) {
 
         setProducts(result.products);
         setCount(result.count);
+        setResultsSearch(term);
         setRequestState("idle");
       } catch {
         if (controller.signal.aborted) {
@@ -67,7 +75,7 @@ export function Catalog({ initialProducts, initialError }: CatalogProps) {
         setCount(0);
         setRequestState("error");
       }
-    }, 280);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => {
       window.clearTimeout(timeoutId);
@@ -87,6 +95,7 @@ export function Catalog({ initialProducts, initialError }: CatalogProps) {
           onRetry={() => setRetryCount((value) => value + 1)}
           products={products}
           requestState={requestState}
+          search={resultsSearch}
         />
       </main>
     </div>

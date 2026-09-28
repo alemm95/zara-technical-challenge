@@ -1,17 +1,17 @@
 import { Catalog } from "@/components/catalog/Catalog";
 import { getProducts } from "@/services/productService";
+import {
+  type CatalogSearchParam,
+  normalizeCatalogSearch,
+} from "@/utils/catalogSearch";
 
-export const dynamic = "force-dynamic";
-
-export default function Home() {
-  return <CatalogPage />;
+interface HomeProps {
+  searchParams: Promise<{ search?: CatalogSearchParam }>;
 }
 
-async function CatalogPage() {
-  try {
-    const products = await getProducts({ limit: 20, offset: 0 });
-    return <Catalog initialProducts={products} initialError={false} />;
-  } catch {
-    return <Catalog initialProducts={[]} initialError />;
-  }
+export default async function Home({ searchParams }: HomeProps) {
+  const search = normalizeCatalogSearch((await searchParams).search);
+  const products = await getProducts({ search, limit: 20, offset: 0 });
+
+  return <Catalog initialProducts={products} initialSearch={search} />;
 }

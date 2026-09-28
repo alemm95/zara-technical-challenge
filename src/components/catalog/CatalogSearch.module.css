@@ -1,0 +1,109 @@
+.section {
+  position: sticky;
+  top: 80px;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block: 24px;
+  background: #ffffff;
+}
+
+.form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #777777;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  padding: 0 44px 0 0;
+  border: 0;
+  outline: 0;
+  color: #111111;
+  background: transparent;
+  font: inherit;
+  font-size: 16px;
+}
+
+.input::placeholder {
+  color: #b7b7b7;
+  opacity: 1;
+}
+
+.clearButton {
+  position: absolute;
+  top: calc(50% - 4px);
+  right: 0;
+  transform: translateY(-50%);
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.clearButton img {
+  width: 20px;
+  height: 20px;
+}
+
+.resultCount {
+  min-height: 14px;
+  margin: 0;
+  color: #333333;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+
+.skeleton {
+  height: 32px;
+  border-bottom: 1px solid #777777;
+  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: search-shimmer 1.25s linear infinite;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.form:focus-within .input,
+.clearButton:focus-visible {
+  outline: 2px solid #202020;
+  outline-offset: 3px;
+}
+
+@keyframes search-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-top: 48px;
+    padding-bottom: 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

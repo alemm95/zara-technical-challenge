@@ -1,0 +1,35 @@
+.results {
+  min-height: 240px;
+}
+
+.statusPanel {
+  display: grid;
+  min-height: 240px;
+  align-content: center;
+  justify-items: center;
+  gap: 13px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.statusMessage {
+  color: #666666;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.retryButton {
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid #111111;
+  color: #ffffff;
+  background: #111111;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid #202020;
+  outline-offset: 3px;
+}

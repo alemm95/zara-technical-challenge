@@ -13,6 +13,7 @@ Tienda de smartphones con catálogo, buscador, ficha de producto configurable y 
 ## Índice
 
 - [El reto](#el-reto)
+- [Screenshots](#screenshots)
 - [Cómo ejecutarlo](#cómo-ejecutarlo)
 - [Cómo está organizado](#cómo-está-organizado)
 - [Accesibilidad y responsive](#accesibilidad-y-responsive)
@@ -68,20 +69,20 @@ El enunciado no define un flujo de pago, así que el carrito termina en "Continu
 
 ### Catálogo
 
-![alt text](image.png)
+![Catálogo con buscador, contador de resultados y cuadrícula de móviles](docs/screenshots/catalog.png)
 
 ### Búsqueda
 
-![alt text](image-1.png)
+![Catálogo filtrado por «apple» con dos resultados](docs/screenshots/catalog-search.png)
 
 ### Detalle
 
-![alt text](image-2.png)
-![alt text](image-3.png)
+![Detalle del iPhone 13 con opciones de almacenamiento y color](docs/screenshots/detail.png)
+![Especificaciones y carrusel de productos similares](docs/screenshots/detail-similar.png)
 
 ### Carrito
 
-![alt text](image-4.png)
+![Carrito con un iPhone 13, total y botones de continuar y pagar](docs/screenshots/cart.png)
 
 ## Cómo ejecutarlo
 

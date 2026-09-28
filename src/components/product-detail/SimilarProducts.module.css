@@ -11,11 +11,9 @@
 
 .list {
   display: flex;
-  overflow-x: auto;
-  border-top: 1px solid #111111;
-  border-left: 1px solid #111111;
+  width: max-content;
+  min-width: 100%;
   list-style: none;
-  scrollbar-width: thin;
 }
 
 .item {

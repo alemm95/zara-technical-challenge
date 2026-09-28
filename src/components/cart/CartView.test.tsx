@@ -71,7 +71,12 @@ describe("CartView", () => {
     renderCart([firstItem, secondItem]);
 
     await screen.findByRole("heading", { name: "CART (2)" });
-    const removeButtons = screen.getAllByRole("button", { name: "Remove" });
+    const removeButtons = screen.getAllByRole("button", {
+      name: /^Eliminar/,
+    });
+    expect(removeButtons[0]).toHaveAccessibleName(
+      "Eliminar Samsung Galaxy S24 Ultra, 512 GB Violet Titanium",
+    );
     await user.click(removeButtons[0]);
 
     expect(
@@ -86,11 +91,23 @@ describe("CartView", () => {
     renderCart([firstItem]);
 
     await screen.findByRole("heading", { name: "CART (1)" });
-    await user.click(screen.getByRole("button", { name: "Remove" }));
+    await user.click(screen.getByRole("button", { name: /^Eliminar/ }));
 
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "CART (0)" })).toBeVisible();
     });
     expect(screen.queryByText("Your cart is empty.")).toBeNull();
+  });
+
+  it("sums fractional prices without floating point noise", async () => {
+    const fractional = { ...firstItem.storage, price: 553.31 };
+    renderCart([
+      { ...firstItem, storage: fractional },
+      { ...secondItem, storage: fractional },
+    ]);
+
+    await screen.findByRole("heading", { name: "CART (2)" });
+
+    expect(screen.getByText("1106.62 EUR")).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import "server-only";
 import type { ProductDetail, ProductSummary } from "@/types/product";
-import { isProductDetail, isProductSummaryList } from "@/types/productGuards";
 import { apiRequest } from "./apiClient";
+import { parseProductDetail, parseProductList } from "./productParsers";
 
 export interface GetProductsOptions {
   search?: string;
@@ -24,12 +24,7 @@ export async function getProducts({
     query.set("search", normalizedSearch);
   }
 
-  const products = await apiRequest<unknown>(`products?${query.toString()}`);
-  if (!isProductSummaryList(products)) {
-    throw new Error("Unexpected products response from the API.");
-  }
-
-  return products;
+  return parseProductList(await apiRequest<unknown>(`products?${query}`));
 }
 
 export async function getProductById(id: string): Promise<ProductDetail> {
@@ -37,12 +32,7 @@ export async function getProductById(id: string): Promise<ProductDetail> {
     throw new Error("Product id is required.");
   }
 
-  const product = await apiRequest<unknown>(
-    `products/${encodeURIComponent(id)}`,
+  return parseProductDetail(
+    await apiRequest<unknown>(`products/${encodeURIComponent(id)}`),
   );
-  if (!isProductDetail(product)) {
-    throw new Error("Unexpected product response from the API.");
-  }
-
-  return product;
 }

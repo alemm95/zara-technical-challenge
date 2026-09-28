@@ -55,4 +55,21 @@ describe("cartStorage", () => {
 
     expect(loadCart()).toEqual([validItem]);
   });
+
+  it("upgrades http image URLs saved by earlier versions", () => {
+    const legacyItem: CartItem = {
+      ...validItem,
+      product: {
+        ...validItem.product,
+        imageUrl: "http://phones.test/s24.webp",
+      },
+      color: { ...validItem.color, imageUrl: "http://phones.test/violet.webp" },
+    };
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify([legacyItem]));
+
+    const [restored] = loadCart();
+
+    expect(restored?.product.imageUrl).toBe("https://phones.test/s24.webp");
+    expect(restored?.color.imageUrl).toBe("https://phones.test/violet.webp");
+  });
 });

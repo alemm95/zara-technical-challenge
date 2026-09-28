@@ -160,11 +160,11 @@ test.describe("cart layout at 1280px (desktop)", () => {
     expect(continueBox.x).toBeCloseTo(100, 0);
   });
 
-  test("keeps Remove 40px above the card bottom", async ({ page }) => {
+  test("keeps Eliminar 40px above the card bottom", async ({ page }) => {
     await openCart(page, { width: 1280, height: 800 });
 
     const item = await box(page.getByRole("listitem"));
-    const remove = await box(page.getByRole("button", { name: "Remove" }));
+    const remove = await box(page.getByRole("button", { name: /^Eliminar/ }));
 
     expect(item.width).toBeCloseTo(548, 0);
     expect(item.height).toBeCloseTo(324, 0);

@@ -1,5 +1,6 @@
 import type { CartItem } from "@/types/cart";
 import { isProductSummary } from "@/types/productGuards";
+import { toHttps } from "@/utils/url";
 
 export const CART_STORAGE_KEY = "mbst-cart";
 
@@ -21,6 +22,15 @@ function isCartItem(value: unknown): value is CartItem {
     typeof value.storage.price === "number" &&
     Number.isFinite(value.storage.price)
   );
+}
+
+// Carts saved before https normalization may still hold http image URLs.
+function secureImages(item: CartItem): CartItem {
+  return {
+    ...item,
+    product: { ...item.product, imageUrl: toHttps(item.product.imageUrl) },
+    color: { ...item.color, imageUrl: toHttps(item.color.imageUrl) },
+  };
 }
 
 function getStorage(): Storage | undefined {
@@ -50,14 +60,16 @@ export function loadCart(storage = getStorage()): CartItem[] {
     const validItems = parsed.filter(isCartItem);
     const seenIds = new Set<string>();
 
-    return validItems.filter((item) => {
-      if (seenIds.has(item.id)) {
-        return false;
-      }
+    return validItems
+      .filter((item) => {
+        if (seenIds.has(item.id)) {
+          return false;
+        }
 
-      seenIds.add(item.id);
-      return true;
-    });
+        seenIds.add(item.id);
+        return true;
+      })
+      .map(secureImages);
   } catch {
     return [];
   }

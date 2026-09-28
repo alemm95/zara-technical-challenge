@@ -26,6 +26,7 @@ export function CatalogHeader() {
             }
             className={styles.cartLink}
             href="/cart"
+            prefetch={false}
           >
             <Image alt="" height={18} src="/icons/bag.svg" width={18} />
             <span

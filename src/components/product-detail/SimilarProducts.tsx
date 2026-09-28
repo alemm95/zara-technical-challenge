@@ -5,9 +5,10 @@ import styles from "./SimilarProducts.module.css";
 
 interface SimilarProductsProps {
   products: ProductSummary[];
+  search?: string;
 }
 
-export function SimilarProducts({ products }: SimilarProductsProps) {
+export function SimilarProducts({ products, search }: SimilarProductsProps) {
   if (products.length === 0) {
     return null;
   }
@@ -22,7 +23,7 @@ export function SimilarProducts({ products }: SimilarProductsProps) {
       <h2 className={styles.title} id="similar-products-title">
         SIMILAR ITEMS
       </h2>
-      <ScrollableRow ariaLabel="Similar items">
+      <ScrollableRow ariaLabel="Scrollable list of similar phones">
         <ul className={styles.list}>
           {products.map((product) => {
             const occurrence = (occurrences.get(product.id) ?? 0) + 1;
@@ -32,6 +33,7 @@ export function SimilarProducts({ products }: SimilarProductsProps) {
               <li className={styles.item} key={`${product.id}-${occurrence}`}>
                 <ProductCard
                   product={product}
+                  search={search}
                   sizes="(min-width: 768px) 377px, 344px"
                 />
               </li>

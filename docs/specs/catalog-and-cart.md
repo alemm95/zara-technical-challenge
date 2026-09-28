@@ -47,15 +47,17 @@ Las imagenes llegan desde `prueba-tecnica-api-tienda-moviles.onrender.com`; Next
 - Mostrar como maximo los primeros 20 telefonos, con imagen, nombre, marca y precio base.
 - Buscar por nombre o marca mediante `GET /products?search=...`, sin filtrar localmente el catalogo.
 - Mostrar el total de resultados de la respuesta actual.
-- Cada tarjeta abre el detalle del producto correspondiente.
-- Mostrar estados de carga, error y busqueda sin resultados.
+- Cada tarjeta abre el detalle del producto correspondiente, conservando el termino de busqueda activo.
+- El termino de busqueda se refleja en la URL (`?search=`): el servidor renderiza el estado inicial desde la URL y el cliente actualiza la URL sin recargar.
+- Mostrar estados de carga (barra de carga manteniendo los resultados previos), error con reintento y busqueda sin resultados.
 
 ### Detalle
 
 - Mostrar nombre, marca, imagen principal, precio y especificaciones tecnicas.
-- Mientras se solicita `GET /products/{id}`, mostrar un skeleton del detalle con `aria-busy="true"` y sin controles de configuracion interactivos.
-- Si la solicitud falla por un error recuperable, mostrar un mensaje comprensible, una accion para reintentar la carga y un enlace para volver al catalogo; no mostrar detalles tecnicos del error.
-- Si la API responde que el producto no existe (404), mostrar un estado vacio indicando que el telefono no esta disponible y ofrecer volver al catalogo; no mostrar controles de compra.
+- Mientras se solicita `GET /products/{id}`, mostrar el lienzo vacio con la barra de carga del diseno (`aria-busy="true"` y estado accesible "Loading product details").
+- Si la solicitud falla por un error recuperable, mostrar el error boundary de la ruta con un mensaje comprensible y una accion "Retry" (`retry()` de Next); no mostrar detalles tecnicos del error.
+- Si la API responde que el producto no existe (404), mostrar la pagina "Page not found" con un enlace para volver al catalogo; no mostrar controles de compra.
+- El enlace "BACK" y los productos similares conservan el termino de busqueda (`?search=`) con el que se llego al detalle.
 - Cambiar la imagen al seleccionar otro color.
 - Mostrar opciones de color y almacenamiento disponibles para el producto.
 - Actualizar el precio seleccionado usando el precio de la opcion de almacenamiento.

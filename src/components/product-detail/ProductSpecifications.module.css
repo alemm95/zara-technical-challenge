@@ -54,7 +54,7 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (--desktop) {
   .section {
     margin-top: 150px;
   }

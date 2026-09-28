@@ -53,11 +53,15 @@ Las imagenes llegan desde `prueba-tecnica-api-tienda-moviles.onrender.com`; Next
 ### Detalle
 
 - Mostrar nombre, marca, imagen principal, precio y especificaciones tecnicas.
+- Mientras se solicita `GET /products/{id}`, mostrar un skeleton del detalle con `aria-busy="true"` y sin controles de configuracion interactivos.
+- Si la solicitud falla por un error recuperable, mostrar un mensaje comprensible, una accion para reintentar la carga y un enlace para volver al catalogo; no mostrar detalles tecnicos del error.
+- Si la API responde que el producto no existe (404), mostrar un estado vacio indicando que el telefono no esta disponible y ofrecer volver al catalogo; no mostrar controles de compra.
 - Cambiar la imagen al seleccionar otro color.
 - Mostrar opciones de color y almacenamiento disponibles para el producto.
 - Actualizar el precio seleccionado usando el precio de la opcion de almacenamiento.
 - Mantener deshabilitado "Añadir al carrito" hasta que color y almacenamiento esten seleccionados.
 - Mostrar productos similares y permitir navegar a su detalle.
+- Si `similarProducts` esta vacio, ocultar esa seccion sin tratar el detalle como un error o estado vacio global.
 
 ### Carrito
 

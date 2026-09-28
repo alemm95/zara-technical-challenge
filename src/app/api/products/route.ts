@@ -1,7 +1,5 @@
 import { getProducts } from "@/services/productService";
 
-export const dynamic = "force-dynamic";
-
 const DEFAULT_LIMIT = 20;
 
 function parseNonNegativeInteger(value: string | null, fallback: number) {

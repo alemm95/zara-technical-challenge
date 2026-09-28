@@ -1,5 +1,29 @@
 import "server-only";
 
+// The API runs on Render's free tier, where a cold start can take about a minute.
+export const API_TIMEOUT_MS = 60_000;
+export const API_REVALIDATE_SECONDS = 60;
+
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(
+    status: number,
+    message = `API request failed with status ${status}.`,
+  ) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+function isAbortError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.name === "TimeoutError" || error.name === "AbortError")
+  );
+}
+
 function getApiConfig() {
   const baseUrl = process.env.PHONES_API_BASE_URL;
   const apiKey = process.env.PHONES_API_KEY;
@@ -41,14 +65,20 @@ export async function apiRequest<T>(
   headers.set("x-api-key", apiKey);
   headers.set("accept", headers.get("accept") ?? "application/json");
 
+  const signal = init.signal ?? AbortSignal.timeout(API_TIMEOUT_MS);
   const response = await fetch(url, {
     ...init,
-    cache: init.cache ?? "no-store",
     headers,
+    signal,
+    next: { revalidate: API_REVALIDATE_SECONDS },
+  }).catch((error: unknown) => {
+    throw signal.aborted || isAbortError(error)
+      ? new ApiError(504, "API request timed out.")
+      : new ApiError(502, "API is unreachable.");
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}.`);
+    throw new ApiError(response.status);
   }
 
   if (response.status === 204) {

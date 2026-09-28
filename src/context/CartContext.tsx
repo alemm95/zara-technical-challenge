@@ -3,11 +3,14 @@
 import {
   createContext,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
 } from "react";
 import type { CartItem, NewCartItem } from "@/types/cart";
+import { sumPrices } from "@/utils/money";
 import { cartReducer, initialCartState } from "./cartReducer";
 import { loadCart, saveCart } from "./cartStorage";
 
@@ -40,33 +43,33 @@ export function CartProvider({ children }: CartProviderProps) {
     }
   }, [state.hydrated, state.items]);
 
-  function addItem(item: NewCartItem) {
+  const addItem = useCallback((item: NewCartItem) => {
     const id =
       globalThis.crypto?.randomUUID?.() ??
       `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     dispatch({ type: "add", item: { ...item, id } });
-  }
+  }, []);
 
-  function removeItem(itemId: string) {
+  const removeItem = useCallback((itemId: string) => {
     dispatch({ type: "remove", itemId });
-  }
+  }, []);
 
-  function clearCart() {
+  const clearCart = useCallback(() => {
     dispatch({ type: "clear" });
-  }
+  }, []);
 
-  const value: CartContextValue = {
-    items: state.items,
-    isHydrated: state.hydrated,
-    totalItems: state.items.length,
-    totalPrice: state.items.reduce(
-      (total, item) => total + item.storage.price,
-      0,
-    ),
-    addItem,
-    removeItem,
-    clearCart,
-  };
+  const value = useMemo<CartContextValue>(
+    () => ({
+      items: state.items,
+      isHydrated: state.hydrated,
+      totalItems: state.items.length,
+      totalPrice: sumPrices(state.items.map((item) => item.storage.price)),
+      addItem,
+      removeItem,
+      clearCart,
+    }),
+    [state.items, state.hydrated, addItem, removeItem, clearCart],
+  );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

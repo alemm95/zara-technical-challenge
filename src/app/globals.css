@@ -1,6 +1,25 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
+  --color-inverse: #ffffff;
+  --color-black: #000000;
+  --color-text-muted: #333333;
+  --color-text-subtle: #666666;
+  --color-placeholder: #b7b7b7;
+  --color-border-muted: #777777;
+  --color-border-light: #999999;
+  --color-highlight: #1b1a18;
+  --color-danger: #df0000;
+  --color-disabled-text: #c2bfbc;
+  --color-disabled-bg: #f3f2f2;
+  --skeleton-gradient: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #f8f8f8 50%,
+    #f0f0f0 75%
+  );
+  --focus-outline: 2px solid var(--foreground);
+  --focus-outline-offset: 3px;
   --header-height: 80px;
 }
 

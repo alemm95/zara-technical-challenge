@@ -6,7 +6,7 @@
   flex-direction: column;
   gap: 12px;
   padding-block: 24px;
-  background: #ffffff;
+  background: var(--background);
 }
 
 .form {
@@ -15,7 +15,7 @@
   align-items: center;
   gap: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #777777;
+  border-bottom: 1px solid var(--color-border-muted);
 }
 
 .input {
@@ -25,14 +25,14 @@
   padding: 0 44px 0 0;
   border: 0;
   outline: 0;
-  color: #111111;
+  color: var(--foreground);
   background: transparent;
   font: inherit;
   font-size: 16px;
 }
 
 .input::placeholder {
-  color: #b7b7b7;
+  color: var(--color-placeholder);
   opacity: 1;
 }
 
@@ -59,7 +59,7 @@
 .resultCount {
   min-height: 14px;
   margin: 0;
-  color: #333333;
+  color: var(--color-text-muted);
   font-size: 12px;
   line-height: 14px;
   text-transform: uppercase;
@@ -67,8 +67,8 @@
 
 .skeleton {
   height: 32px;
-  border-bottom: 1px solid #777777;
-  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  border-bottom: 1px solid var(--color-border-muted);
+  background: var(--skeleton-gradient);
   background-size: 200% 100%;
   animation: search-shimmer 1.25s linear infinite;
 }
@@ -85,8 +85,8 @@
 
 .form:focus-within .input,
 .clearButton:focus-visible {
-  outline: 2px solid #202020;
-  outline-offset: 3px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 @keyframes search-shimmer {

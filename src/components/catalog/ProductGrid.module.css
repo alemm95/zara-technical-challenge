@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 1fr;
   margin-top: 24px;
-  border-left: 1px solid #111111;
+  border-left: 1px solid var(--foreground);
 }
 
 .grid {
@@ -11,15 +11,15 @@
 }
 
 .skeletonGrid {
-  border-top: 1px solid #111111;
+  border-top: 1px solid var(--foreground);
 }
 
 .cell {
   min-width: 0;
   aspect-ratio: 1 / 1;
-  border-top: 1px solid #111111;
-  border-right: 1px solid #111111;
-  border-bottom: 1px solid #111111;
+  border-top: 1px solid var(--foreground);
+  border-right: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .cell:nth-child(n + 2) {
@@ -32,13 +32,13 @@
   aspect-ratio: 1 / 1;
   grid-template-rows: 1fr auto;
   padding: 16px;
-  border-right: 1px solid #111111;
-  border-bottom: 1px solid #111111;
+  border-right: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .skeletonImage,
 .skeletonLine {
-  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background: var(--skeleton-gradient);
   background-size: 200% 100%;
   animation: catalog-shimmer 1.25s linear infinite;
 }
@@ -76,7 +76,7 @@
   }
 
   .cell:nth-child(2) {
-    border-top: 1px solid #111111;
+    border-top: 1px solid var(--foreground);
   }
 }
 
@@ -90,7 +90,7 @@
   .cell:nth-child(3),
   .cell:nth-child(4),
   .cell:nth-child(5) {
-    border-top: 1px solid #111111;
+    border-top: 1px solid var(--foreground);
   }
 }
 

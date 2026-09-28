@@ -3,11 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { buildProductHref } from "@/utils/catalogSearch";
+import { formatPrice } from "@/utils/money";
 import styles from "./CartView.module.css";
-
-function formatPrice(price: number) {
-  return `${price} EUR`;
-}
 
 export function CartView() {
   const { isHydrated, items, removeItem, totalPrice } = useCart();
@@ -21,56 +19,62 @@ export function CartView() {
       <div className={styles.content}>
         <h1 className={styles.title}>CART ({items.length})</h1>
 
-        {items.length > 0 ? (
+        {items.length > 0 && (
           <ul className={styles.items}>
-            {items.map((item) => (
-              <li className={styles.item} key={item.id}>
-                <Link
-                  aria-label={`${item.product.brand} ${item.product.name}`}
-                  className={styles.imageLink}
-                  href={`/product/${encodeURIComponent(item.product.id)}`}
-                >
-                  <Image
-                    alt={item.product.name}
-                    className={styles.image}
-                    fill
-                    sizes="160px"
-                    src={item.color.imageUrl || item.product.imageUrl}
-                  />
-                </Link>
-                <div className={styles.itemDetails}>
-                  <div className={styles.info}>
-                    <div className={styles.configuration}>
-                      <div className={styles.brandName}>
-                        <p className={styles.brand}>{item.product.brand}</p>
-                        <Link
-                          className={styles.productName}
-                          href={`/product/${encodeURIComponent(item.product.id)}`}
-                        >
-                          {item.product.name}
-                        </Link>
+            {items.map((item, index) => {
+              const productHref = buildProductHref(item.product.id);
+
+              return (
+                <li className={styles.item} key={item.id}>
+                  <Link
+                    aria-label={`${item.product.brand} ${item.product.name}`}
+                    className={styles.imageLink}
+                    href={productHref}
+                  >
+                    <Image
+                      alt={`${item.product.brand} ${item.product.name} in ${item.color.name}`}
+                      className={styles.image}
+                      fill
+                      priority={index === 0}
+                      sizes="(min-width: 768px) 262px, 160px"
+                      src={item.color.imageUrl || item.product.imageUrl}
+                    />
+                  </Link>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.info}>
+                      <div className={styles.configuration}>
+                        <div className={styles.brandName}>
+                          <Link className={styles.brand} href={productHref}>
+                            {item.product.brand}
+                          </Link>
+                          <Link
+                            className={styles.productName}
+                            href={productHref}
+                          >
+                            {item.product.name}
+                          </Link>
+                        </div>
+                        <p className={styles.variant}>
+                          {item.storage.capacity} | {item.color.name}
+                        </p>
                       </div>
-                      <p className={styles.variant}>
-                        {item.storage.capacity} | {item.color.name}
+                      <p className={styles.itemPrice}>
+                        {formatPrice(item.storage.price)}
                       </p>
                     </div>
-                    <p className={styles.itemPrice}>
-                      {formatPrice(item.storage.price)}
-                    </p>
+                    <button
+                      aria-label={`Eliminar ${item.product.brand} ${item.product.name}, ${item.storage.capacity} ${item.color.name}`}
+                      className={styles.removeButton}
+                      onClick={() => removeItem(item.id)}
+                      type="button"
+                    >
+                      Eliminar
+                    </button>
                   </div>
-                  <button
-                    className={styles.removeButton}
-                    onClick={() => removeItem(item.id)}
-                    type="button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
-        ) : (
-          <div className={styles.emptyState} />
         )}
 
         <footer className={styles.footer}>

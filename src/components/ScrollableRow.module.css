@@ -1,7 +1,7 @@
 .scroll {
   overflow-x: auto;
-  border-top: 1px solid #111111;
-  border-left: 1px solid #111111;
+  border-top: 1px solid var(--foreground);
+  border-left: 1px solid var(--foreground);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -11,8 +11,8 @@
 }
 
 .scroll:focus-visible {
-  outline: 2px solid #111111;
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .content {
@@ -43,6 +43,6 @@
   position: absolute;
   top: 0;
   height: 100%;
-  background: #000000;
+  background: var(--color-black);
   pointer-events: none;
 }

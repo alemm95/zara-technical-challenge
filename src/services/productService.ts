@@ -1,6 +1,7 @@
 import "server-only";
 import type { ProductDetail, ProductSummary } from "@/types/product";
 import { apiRequest } from "./apiClient";
+import { parseProductDetail, parseProductList } from "./productParsers";
 
 export interface GetProductsOptions {
   search?: string;
@@ -23,7 +24,7 @@ export async function getProducts({
     query.set("search", normalizedSearch);
   }
 
-  return apiRequest<ProductSummary[]>(`products?${query.toString()}`);
+  return parseProductList(await apiRequest<unknown>(`products?${query}`));
 }
 
 export async function getProductById(id: string): Promise<ProductDetail> {
@@ -31,5 +32,7 @@ export async function getProductById(id: string): Promise<ProductDetail> {
     throw new Error("Product id is required.");
   }
 
-  return apiRequest<ProductDetail>(`products/${encodeURIComponent(id)}`);
+  return parseProductDetail(
+    await apiRequest<unknown>(`products/${encodeURIComponent(id)}`),
+  );
 }

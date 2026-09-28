@@ -1,6 +1,7 @@
-import { HttpResponse, http } from "msw";
+import { delay, HttpResponse, http } from "msw";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { server } from "@/test/server";
+import { ApiError } from "./apiClient";
 import { getProductById, getProducts } from "./productService";
 
 const apiOrigin = "https://phones.example.test";
@@ -82,6 +83,80 @@ describe("getProducts", () => {
       "PHONES_API_BASE_URL and PHONES_API_KEY must be configured.",
     );
   });
+
+  it("exposes the HTTP status through ApiError", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products`, () =>
+        HttpResponse.json({}, { status: 503 }),
+      ),
+    );
+
+    await expect(getProducts()).rejects.toMatchObject({
+      name: "ApiError",
+      status: 503,
+    });
+    await expect(getProducts()).rejects.toBeInstanceOf(ApiError);
+  });
+
+  it("upgrades http image URLs to https", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products`, () =>
+        HttpResponse.json([
+          {
+            id: "SMG-S24U",
+            brand: "Samsung",
+            name: "Galaxy S24 Ultra",
+            basePrice: 1329,
+            imageUrl: "http://phones.example.test/images/SMG-S24U.webp",
+          },
+        ]),
+      ),
+    );
+
+    const [product] = await getProducts();
+
+    expect(product?.imageUrl).toBe(
+      "https://phones.example.test/images/SMG-S24U.webp",
+    );
+  });
+
+  it("maps a network failure to a 502 ApiError", async () => {
+    server.use(http.get(`${apiOrigin}/products`, () => HttpResponse.error()));
+
+    await expect(getProducts()).rejects.toMatchObject({
+      name: "ApiError",
+      status: 502,
+    });
+  });
+
+  it("maps a timeout to a 504 ApiError", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products`, async () => {
+        await delay(200);
+        return HttpResponse.json([]);
+      }),
+    );
+    vi.spyOn(AbortSignal, "timeout").mockReturnValue(
+      AbortSignal.abort(new DOMException("timeout", "TimeoutError")),
+    );
+
+    await expect(getProducts()).rejects.toMatchObject({
+      name: "ApiError",
+      status: 504,
+    });
+  });
+
+  it("rejects payloads that are not a product list", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products`, () =>
+        HttpResponse.json([{ id: "SMG-S24U" }]),
+      ),
+    );
+
+    await expect(getProducts()).rejects.toThrow(
+      "Unexpected products response from the API.",
+    );
+  });
 });
 
 describe("getProductById", () => {
@@ -132,6 +207,30 @@ describe("getProductById", () => {
   it("rejects an empty product id without making a request", async () => {
     await expect(getProductById(" ")).rejects.toThrow(
       "Product id is required.",
+    );
+  });
+
+  it("reports a missing product as ApiError 404", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products/:id`, () =>
+        HttpResponse.json({}, { status: 404 }),
+      ),
+    );
+
+    await expect(getProductById("missing")).rejects.toMatchObject({
+      status: 404,
+    });
+  });
+
+  it("rejects payloads that are not a product detail", async () => {
+    server.use(
+      http.get(`${apiOrigin}/products/:id`, () =>
+        HttpResponse.json({ id: "SMG-S24U", name: "Galaxy S24 Ultra" }),
+      ),
+    );
+
+    await expect(getProductById("SMG-S24U")).rejects.toThrow(
+      "Unexpected product response from the API.",
     );
   });
 });

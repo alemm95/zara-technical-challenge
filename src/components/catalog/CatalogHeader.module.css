@@ -7,17 +7,17 @@
   align-items: center;
   justify-content: space-between;
   padding-inline: 16px;
-  background: #ffffff;
+  background: var(--background);
 }
 
 .header::after {
   position: absolute;
   right: 0;
   left: 0;
-  top: 80px;
+  top: var(--header-height);
   display: none;
   height: 1px;
-  background: #000000;
+  background: var(--color-black);
   content: "";
 }
 
@@ -25,7 +25,7 @@
 .cartLink {
   display: inline-flex;
   align-items: center;
-  color: #111111;
+  color: var(--foreground);
 }
 
 .brand {
@@ -48,8 +48,8 @@
   height: 29px;
   flex: 0 0 48px;
   align-items: center;
-  color: #000000;
-  font-family: "ABC Monument Grotesk", Helvetica, Arial, sans-serif;
+  color: var(--color-black);
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 20.8163px;
   font-weight: 700;
   letter-spacing: -0.28em;
@@ -58,16 +58,23 @@
 }
 
 .cartLink {
-  gap: 8px;
-  min-width: 44px;
-  min-height: 44px;
-  justify-content: flex-end;
-  font-size: 12px;
+  display: inline-flex;
+  width: 33px;
+  min-width: 33px;
+  height: 26px;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 0;
+  gap: 6px;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 300;
 }
 
 .cartLink img {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
 }
 
 @media (min-width: 768px) {
@@ -87,7 +94,7 @@
 }
 
 .cartCount {
-  min-width: 2ch;
+  min-width: 9px;
   text-align: right;
 }
 
@@ -97,6 +104,6 @@
 
 .brand:focus-visible,
 .cartLink:focus-visible {
-  outline: 2px solid #202020;
-  outline-offset: 3px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }

@@ -1,3 +1,4 @@
+import { ApiError } from "@/services/apiClient";
 import { getProductById } from "@/services/productService";
 
 export const dynamic = "force-dynamic";
@@ -14,9 +15,7 @@ export async function GET(_request: Request, { params }: ProductRouteContext) {
     return Response.json(product);
   } catch (error) {
     const status =
-      error instanceof Error && error.message.includes("status 404")
-        ? 404
-        : 502;
+      error instanceof ApiError && error.status === 404 ? 404 : 502;
 
     return Response.json(
       {

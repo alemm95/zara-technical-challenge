@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ProductSummary } from "@/types/product";
+import { isProductListResponse } from "@/types/productGuards";
 import styles from "./Catalog.module.css";
 import { type CatalogRequestState, CatalogResults } from "./CatalogResults";
 import { CatalogSearch } from "./CatalogSearch";
@@ -9,11 +10,6 @@ import { CatalogSearch } from "./CatalogSearch";
 interface CatalogProps {
   initialProducts: ProductSummary[];
   initialError: boolean;
-}
-
-interface ProductResponse {
-  products: ProductSummary[];
-  count: number;
 }
 
 export function Catalog({ initialProducts, initialError }: CatalogProps) {
@@ -54,7 +50,11 @@ export function Catalog({ initialProducts, initialError }: CatalogProps) {
           throw new Error("Catalog request failed.");
         }
 
-        const result = (await response.json()) as ProductResponse;
+        const result: unknown = await response.json();
+        if (!isProductListResponse(result)) {
+          throw new Error("Unexpected catalog response.");
+        }
+
         setProducts(result.products);
         setCount(result.count);
         setRequestState("idle");

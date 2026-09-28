@@ -26,7 +26,7 @@ export function CatalogHeader() {
           className={styles.cartLink}
           href="/cart"
         >
-          <Image alt="" height={17} src="/icons/bag.svg" width={17} />
+          <Image alt="" height={18} src="/icons/bag.svg" width={18} />
           <span
             aria-hidden="true"
             className={styles.cartCount}

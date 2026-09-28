@@ -10,7 +10,7 @@
   gap: 24px;
   padding: 16px;
   color: inherit;
-  background-image: linear-gradient(#111111, #111111);
+  background-image: linear-gradient(var(--foreground), var(--foreground));
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: 100% 0;
@@ -26,7 +26,7 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgb(0 0 0 / 12%);
   background-size: 100% 100%;
-  color: #ffffff;
+  color: var(--color-inverse);
 }
 
 .imageFrame {
@@ -64,7 +64,7 @@
 
 .brand {
   overflow: hidden;
-  color: #666666;
+  color: var(--color-text-subtle);
   font-size: 10px;
   line-height: 14px;
   text-overflow: ellipsis;
@@ -100,7 +100,7 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgb(0 0 0 / 12%);
     background-size: 100% 100%;
-    color: #ffffff;
+    color: var(--color-inverse);
   }
 
   .cardLink:hover .image {

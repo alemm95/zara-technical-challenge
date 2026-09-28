@@ -9,6 +9,7 @@ import type {
   ProductColorOption,
   ProductStorageOption,
 } from "@/types/product";
+import { isProductDetail } from "@/types/productGuards";
 import styles from "./ProductDetailLayout.module.css";
 import { ProductSpecifications } from "./ProductSpecifications";
 import { SimilarProducts } from "./SimilarProducts";
@@ -53,7 +54,11 @@ export function ProductDetail({
         throw new Error("Unable to load product details.");
       }
 
-      const loadedProduct = (await response.json()) as Product;
+      const loadedProduct: unknown = await response.json();
+      if (!isProductDetail(loadedProduct)) {
+        throw new Error("Unexpected product response.");
+      }
+
       setProduct(loadedProduct);
       setSelectedColor(loadedProduct.colorOptions[0] ?? null);
       setSelectedStorage(null);

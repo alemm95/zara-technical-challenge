@@ -50,6 +50,13 @@ describe("CartView", () => {
     expect(screen.getByText("512 GB | Violet Titanium")).toBeInTheDocument();
     expect(screen.getByText("256 GB | Black Titanium")).toBeInTheDocument();
     expect(screen.getByText("2298 EUR")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Samsung" })).toHaveLength(2);
+    expect(
+      screen.getAllByRole("link", { name: "Galaxy S24 Ultra" }),
+    ).toHaveLength(2);
+    expect(
+      screen.getAllByRole("link", { name: "Samsung Galaxy S24 Ultra" }),
+    ).toHaveLength(2);
     expect(
       screen.getByRole("link", { name: "CONTINUE SHOPPING" }),
     ).toHaveAttribute("href", "/");

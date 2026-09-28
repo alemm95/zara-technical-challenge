@@ -1,20 +1,10 @@
 import type { CartItem } from "@/types/cart";
+import { isProductSummary } from "@/types/productGuards";
 
 export const CART_STORAGE_KEY = "mbst-cart";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
-}
-
-function isProductSummary(value: unknown): boolean {
-  return (
-    isRecord(value) &&
-    typeof value.id === "string" &&
-    typeof value.brand === "string" &&
-    typeof value.name === "string" &&
-    typeof value.basePrice === "number" &&
-    typeof value.imageUrl === "string"
-  );
 }
 
 function isCartItem(value: unknown): value is CartItem {

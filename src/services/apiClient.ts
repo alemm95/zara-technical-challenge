@@ -1,5 +1,15 @@
 import "server-only";
 
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`API request failed with status ${status}.`);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 function getApiConfig() {
   const baseUrl = process.env.PHONES_API_BASE_URL;
   const apiKey = process.env.PHONES_API_KEY;
@@ -48,7 +58,7 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}.`);
+    throw new ApiError(response.status);
   }
 
   if (response.status === 204) {

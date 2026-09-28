@@ -2,8 +2,8 @@
   width: 100%;
   min-height: 100svh;
   padding: 0 16px 24px;
-  color: #111111;
-  background: #ffffff;
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .content {

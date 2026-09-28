@@ -21,9 +21,9 @@ export function CartView() {
       <div className={styles.content}>
         <h1 className={styles.title}>CART ({items.length})</h1>
 
-        {items.length > 0 ? (
+        {items.length > 0 && (
           <ul className={styles.items}>
-            {items.map((item) => (
+            {items.map((item, index) => (
               <li className={styles.item} key={item.id}>
                 <Link
                   aria-label={`${item.product.brand} ${item.product.name}`}
@@ -31,10 +31,11 @@ export function CartView() {
                   href={`/product/${encodeURIComponent(item.product.id)}`}
                 >
                   <Image
-                    alt={item.product.name}
+                    alt={`${item.product.brand} ${item.product.name} in ${item.color.name}`}
                     className={styles.image}
                     fill
-                    sizes="160px"
+                    priority={index === 0}
+                    sizes="(min-width: 768px) 262px, 160px"
                     src={item.color.imageUrl || item.product.imageUrl}
                   />
                 </Link>
@@ -42,7 +43,12 @@ export function CartView() {
                   <div className={styles.info}>
                     <div className={styles.configuration}>
                       <div className={styles.brandName}>
-                        <p className={styles.brand}>{item.product.brand}</p>
+                        <Link
+                          className={styles.brand}
+                          href={`/product/${encodeURIComponent(item.product.id)}`}
+                        >
+                          {item.product.brand}
+                        </Link>
                         <Link
                           className={styles.productName}
                           href={`/product/${encodeURIComponent(item.product.id)}`}
@@ -69,8 +75,6 @@ export function CartView() {
               </li>
             ))}
           </ul>
-        ) : (
-          <div className={styles.emptyState} />
         )}
 
         <footer className={styles.footer}>

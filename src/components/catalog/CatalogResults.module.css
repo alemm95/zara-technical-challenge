@@ -13,7 +13,7 @@
 }
 
 .statusMessage {
-  color: #666666;
+  color: var(--color-text-subtle);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -21,15 +21,15 @@
 .retryButton {
   min-height: 44px;
   padding: 0 22px;
-  border: 1px solid #111111;
-  color: #ffffff;
-  background: #111111;
+  border: 1px solid var(--foreground);
+  color: var(--color-inverse);
+  background: var(--foreground);
   font: inherit;
   font-size: 10px;
   cursor: pointer;
 }
 
 .retryButton:focus-visible {
-  outline: 2px solid #202020;
-  outline-offset: 3px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }

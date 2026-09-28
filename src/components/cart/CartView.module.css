@@ -1,0 +1,269 @@
+.page {
+  min-height: calc(100svh - var(--header-height));
+  padding: 32px 0 180px;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.content {
+  width: 100%;
+  padding-inline: var(--page-gutter);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 72px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 548px;
+}
+
+.imageLink {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 160px;
+  aspect-ratio: 160 / 197.863;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.itemDetails {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  flex-direction: column;
+  align-self: stretch;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-block: 40px;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.configuration {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.brandName {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.brand,
+.productName,
+.variant,
+.itemPrice {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.variant {
+  color: var(--color-text-muted);
+}
+
+.removeButton {
+  border: 0;
+  color: var(--color-danger);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 24px 12px;
+  padding: 16px var(--page-gutter) 24px;
+  background: var(--background);
+}
+
+.summary {
+  display: contents;
+}
+
+.continueLink,
+.payButton {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0;
+  border: 1px solid var(--color-border-light);
+  font: inherit;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.total {
+  display: flex;
+  order: 1;
+  flex-basis: 100%;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  text-transform: uppercase;
+}
+
+.total strong {
+  font-weight: 400;
+}
+
+.continueLink {
+  order: 2;
+  flex: 1 1 0%;
+  white-space: nowrap;
+}
+
+.payButton {
+  order: 3;
+  flex: 1 1 0%;
+  border-color: var(--foreground);
+  color: var(--color-inverse);
+  background: var(--foreground);
+  cursor: not-allowed;
+}
+
+.imageLink:focus-visible,
+.brand:focus-visible,
+.productName:focus-visible,
+.removeButton:focus-visible,
+.continueLink:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+@media (--tablet) {
+  .page {
+    padding-top: 44px;
+  }
+
+  .items {
+    gap: 48px;
+  }
+
+  .item {
+    gap: 40px;
+  }
+
+  .imageLink {
+    width: 262px;
+    aspect-ratio: 262 / 324;
+  }
+
+  .footer {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0;
+    padding-block: 24px 40px;
+  }
+
+  .total {
+    order: 2;
+    flex-basis: auto;
+    justify-content: flex-start;
+    gap: 24px;
+    margin-right: 56px;
+  }
+
+  .continueLink {
+    order: 1;
+    flex: 0 0 200px;
+    margin-right: auto;
+  }
+
+  .payButton {
+    flex: 0 0 260px;
+  }
+}
+
+@media (--desktop) {
+  .footer {
+    justify-content: space-between;
+    padding-block: 24px 56px;
+  }
+
+  .summary {
+    display: flex;
+    order: 2;
+    flex: 1 1 0%;
+    height: 56px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 80px;
+  }
+
+  .total {
+    flex: 0 0 auto;
+    margin-right: 0;
+    font-size: 14px;
+    line-height: 17px;
+  }
+
+  .continueLink {
+    flex-basis: 260px;
+    height: 56px;
+    padding: 20px 32px;
+    border: 0.5px solid var(--color-highlight);
+    line-height: 16px;
+  }
+
+  .payButton {
+    height: 56px;
+    padding: 20px 32px;
+    border: 0;
+    background: var(--color-highlight);
+    line-height: 16px;
+  }
+}

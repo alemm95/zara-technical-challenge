@@ -1,25 +1,51 @@
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
+  --color-inverse: #ffffff;
+  --color-black: #000000;
+  --color-text-muted: #333333;
+  --color-text-subtle: #666666;
+  --color-placeholder: #b7b7b7;
+  --color-border-muted: #777777;
+  --color-border-light: #999999;
+  --color-highlight: #1b1a18;
+  --color-danger: #df0000;
+  --color-disabled-text: #c2bfbc;
+  --color-disabled-bg: #f3f2f2;
+  --focus-outline: 2px solid var(--foreground);
+  --focus-outline-offset: 3px;
+  --header-height: 80px;
+  --page-gutter: 16px;
+  --z-sticky: 9;
+  --z-header: 10;
+  --z-loading: 11;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (--tablet) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --page-gutter: 40px;
+  }
+}
+
+@media (--desktop) {
+  :root {
+    --page-gutter: 100px;
   }
 }
 
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.2;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -35,8 +61,47 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.status-page {
+  display: flex;
+  min-height: calc(100svh - var(--header-height));
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  padding: 44px var(--page-gutter);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.status-title {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.status-message {
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.status-action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 32px;
+  border: 1px solid var(--foreground);
+  color: var(--color-inverse);
+  background: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.status-action:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }

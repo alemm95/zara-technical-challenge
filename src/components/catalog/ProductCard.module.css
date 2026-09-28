@@ -1,0 +1,121 @@
+.cardLink {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px;
+  color: inherit;
+  background-image: linear-gradient(var(--foreground), var(--foreground));
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 0;
+  transition:
+    background-size 420ms ease-in-out,
+    color 300ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.cardLink:focus-visible {
+  z-index: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgb(0 0 0 / 12%);
+  background-size: 100% 100%;
+  color: var(--color-inverse);
+}
+
+.imageFrame {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: contain;
+  transition: transform 200ms ease;
+}
+
+.cardLink:focus-visible .image {
+  transform: scale(1.035);
+}
+
+.info {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.brandName {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  text-transform: uppercase;
+}
+
+.brand {
+  overflow: hidden;
+  color: var(--color-text-subtle);
+  font-size: 10px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.price {
+  flex: 0 0 auto;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cardLink:focus-visible .brand {
+  color: rgb(255 255 255 / 60%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cardLink:hover {
+    z-index: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgb(0 0 0 / 12%);
+    background-size: 100% 100%;
+    color: var(--color-inverse);
+  }
+
+  .cardLink:hover .image {
+    transform: scale(1.035);
+  }
+
+  .cardLink:hover .brand {
+    color: rgb(255 255 255 / 60%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardLink,
+  .image,
+  .brand {
+    transition-duration: 0ms;
+  }
+}

@@ -2,24 +2,52 @@
   "name": "zara-technical-challenge",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "prepare": "husky"
   },
   "dependencies": {
+    "next": "^16.3.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.26"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
+    "@biomejs/biome": "^2.5.14",
+    "@csstools/postcss-global-data": "^4.0.0",
+    "@playwright/test": "^1.63.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^24.19.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.26",
-    "@eslint/eslintrc": "^3"
+    "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^5.0.2",
+    "autoprefixer": "^10.6.1",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "msw": "^2.15.0",
+    "postcss": "^8.5.28",
+    "postcss-custom-media": "^12.0.2",
+    "typescript": "^5",
+    "vite": "^7.3.6",
+    "vitest": "^5.0.2",
+    "vitest-axe": "^0.1.0"
   }
 }

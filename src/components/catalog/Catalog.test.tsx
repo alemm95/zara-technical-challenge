@@ -1,8 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { delay, HttpResponse, http } from "msw";
-import { StrictMode } from "react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { axe } from "vitest-axe";
 import { CartProvider } from "@/context/CartContext";
 import { server } from "@/test/server";
@@ -25,20 +24,29 @@ const secondPhone: ProductSummary = {
   imageUrl: "https://phones.example.test/images/APL-I15P.webp",
 };
 
-function renderCatalog(
-  initialProducts: ProductSummary[],
-  initialError: boolean,
-) {
+const searchbox = () =>
+  screen.getByRole("textbox", {
+    name: "Search for a smartphone by name or brand",
+  });
+
+function renderCatalog(initialProducts: ProductSummary[], initialSearch = "") {
   return render(
     <CartProvider>
-      <Catalog initialProducts={initialProducts} initialError={initialError} />
+      <Catalog
+        initialProducts={initialProducts}
+        initialSearch={initialSearch}
+      />
     </CartProvider>,
   );
 }
 
+beforeEach(() => {
+  window.history.replaceState(null, "", "/");
+});
+
 describe("Catalog", () => {
   it("renders the initial catalog and has no detected accessibility violations", async () => {
-    const { container } = renderCatalog([firstPhone], false);
+    const { container } = renderCatalog([firstPhone]);
 
     expect(screen.getByText("1 RESULTS")).toBeInTheDocument();
     expect(
@@ -57,6 +65,15 @@ describe("Catalog", () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
+  it("starts from the search in the URL without requesting it again", () => {
+    renderCatalog([secondPhone], "Apple");
+
+    expect(searchbox()).toHaveValue("Apple");
+    expect(
+      screen.getByRole("link", { name: "Apple iPhone 15 Pro, 1219 EUR" }),
+    ).toHaveAttribute("href", "/product/APL-I15P?search=Apple");
+  });
+
   it("sends the search term to the API and displays the returned count", async () => {
     const user = userEvent.setup();
     server.use(
@@ -70,13 +87,8 @@ describe("Catalog", () => {
       }),
     );
 
-    renderCatalog([firstPhone], false);
-    await user.type(
-      screen.getByRole("textbox", {
-        name: "Search for a smartphone by name or brand",
-      }),
-      "Apple",
-    );
+    renderCatalog([firstPhone]);
+    await user.type(searchbox(), "Apple");
 
     expect(
       await screen.findByRole("link", {
@@ -86,23 +98,50 @@ describe("Catalog", () => {
     expect(screen.getByText("1 RESULTS")).toBeInTheDocument();
   });
 
-  it("clears the search using the external clear button", async () => {
+  it("reflects the committed search in the URL and in product links", async () => {
     const user = userEvent.setup();
-    renderCatalog([firstPhone], false);
-
-    const searchInput = screen.getByRole("textbox", {
-      name: "Search for a smartphone by name or brand",
-    });
-    await user.type(searchInput, "Apple");
-    await user.click(
-      await screen.findByRole("button", { name: "Clear search" }),
+    server.use(
+      http.get("*/api/products", () =>
+        HttpResponse.json({ products: [secondPhone], count: 1 }),
+      ),
     );
 
-    expect(searchInput).toHaveValue("");
-    expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+    renderCatalog([firstPhone]);
+    await user.type(searchbox(), "Apple");
+
+    expect(
+      await screen.findByRole("link", { name: /iPhone 15 Pro/ }),
+    ).toHaveAttribute("href", "/product/APL-I15P?search=Apple");
+    expect(window.location.search).toBe("?search=Apple");
   });
 
-  it("shows loading feedback while a search request is pending", async () => {
+  it("clears the search using the external clear button and restores the plain URL", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get("*/api/products", ({ request }) =>
+        HttpResponse.json({
+          products: new URL(request.url).searchParams.has("search")
+            ? [secondPhone]
+            : [firstPhone],
+          count: 1,
+        }),
+      ),
+    );
+    renderCatalog([firstPhone]);
+
+    await user.type(searchbox(), "Apple");
+    await screen.findByRole("link", { name: /iPhone 15 Pro/ });
+    await user.click(screen.getByRole("button", { name: "Clear search" }));
+
+    expect(searchbox()).toHaveValue("");
+    expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+    expect(
+      await screen.findByRole("link", { name: /Galaxy S24 Ultra/ }),
+    ).toHaveAttribute("href", "/product/SMG-S24U");
+    expect(window.location.search).toBe("");
+  });
+
+  it("keeps the previous results and shows the loading bar while searching", async () => {
     const user = userEvent.setup();
     server.use(
       http.get("*/api/products", async () => {
@@ -111,18 +150,18 @@ describe("Catalog", () => {
       }),
     );
 
-    renderCatalog([firstPhone], false);
-    await user.type(
-      screen.getByRole("textbox", {
-        name: "Search for a smartphone by name or brand",
-      }),
-      "Pixel",
-    );
+    renderCatalog([firstPhone]);
+    await user.type(searchbox(), "Pixel");
 
+    expect(await screen.findByText("Loading phones")).toBeInTheDocument();
     expect(
-      await screen.findByRole("status", { name: "Loading phones" }),
-    ).toBeVisible();
+      screen.getByRole("region", { name: "Phone results" }),
+    ).toHaveAttribute("aria-busy", "true");
+    expect(
+      screen.getByRole("link", { name: /Galaxy S24 Ultra/ }),
+    ).toBeInTheDocument();
     expect(await screen.findByText("No smartphones found.")).toBeVisible();
+    expect(screen.queryByText("Loading phones")).toBeNull();
   });
 
   it("shows a recoverable error and retries the API request", async () => {
@@ -131,53 +170,27 @@ describe("Catalog", () => {
     server.use(
       http.get("*/api/products", () => {
         requestCount += 1;
-        return HttpResponse.json({ products: [secondPhone], count: 1 });
+        return requestCount === 1
+          ? HttpResponse.json({ message: "Unavailable" }, { status: 502 })
+          : HttpResponse.json({ products: [secondPhone], count: 1 });
       }),
     );
 
-    render(
-      <StrictMode>
-        <CartProvider>
-          <Catalog initialProducts={[]} initialError />
-        </CartProvider>
-      </StrictMode>,
-    );
-    expect(
-      screen.getByText("We couldn't load the phones. Please try again."),
-    ).toBeVisible();
-    expect(requestCount).toBe(0);
-
-    await user.click(screen.getByRole("button", { name: "Retry" }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole("link", {
-          name: "Apple iPhone 15 Pro, 1219 EUR",
-        }),
-      ).toBeInTheDocument();
-    });
-    expect(requestCount).toBe(1);
-  });
-
-  it("shows an error when an API search request fails", async () => {
-    const user = userEvent.setup();
-    server.use(
-      http.get("*/api/products", () =>
-        HttpResponse.json({ message: "Unavailable" }, { status: 502 }),
-      ),
-    );
-
-    renderCatalog([firstPhone], false);
-    await user.type(
-      screen.getByRole("textbox", {
-        name: "Search for a smartphone by name or brand",
-      }),
-      "Pixel",
-    );
+    renderCatalog([firstPhone]);
+    await user.type(searchbox(), "Apple");
 
     expect(
       await screen.findByText("We couldn't load the phones. Please try again."),
     ).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: "Retry" }));
+
+    expect(
+      await screen.findByRole("link", {
+        name: "Apple iPhone 15 Pro, 1219 EUR",
+      }),
+    ).toBeInTheDocument();
+    expect(requestCount).toBe(2);
   });
 
   it("shows an empty state when the API returns no matching products", async () => {
@@ -188,13 +201,8 @@ describe("Catalog", () => {
       ),
     );
 
-    renderCatalog([firstPhone], false);
-    await user.type(
-      screen.getByRole("textbox", {
-        name: "Search for a smartphone by name or brand",
-      }),
-      "nothing",
-    );
+    renderCatalog([firstPhone]);
+    await user.type(searchbox(), "nothing");
 
     expect(await screen.findByText("No smartphones found.")).toBeVisible();
     expect(screen.getByText("0 RESULTS")).toBeInTheDocument();

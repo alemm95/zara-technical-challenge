@@ -4,14 +4,10 @@ import styles from "./ProductGrid.module.css";
 
 interface ProductGridProps {
   products: ProductSummary[];
+  search?: string;
 }
 
-const skeletonKeys = Array.from(
-  { length: 10 },
-  (_, index) => `catalog-skeleton-${index + 1}`,
-);
-
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, search }: ProductGridProps) {
   const occurrences = new Map<string, number>();
 
   return (
@@ -22,34 +18,10 @@ export function ProductGrid({ products }: ProductGridProps) {
 
         return (
           <li className={styles.cell} key={`${product.id}-${occurrence}`}>
-            <ProductCard product={product} eager={index < 10} />
+            <ProductCard product={product} eager={index < 10} search={search} />
           </li>
         );
       })}
     </ul>
-  );
-}
-
-export function ProductGridSkeleton() {
-  return (
-    <div
-      aria-label="Loading phones"
-      className={styles.skeletonGrid}
-      role="status"
-    >
-      {skeletonKeys.map((skeletonKey) => (
-        <div
-          aria-hidden="true"
-          className={styles.skeletonCard}
-          key={skeletonKey}
-        >
-          <div className={styles.skeletonImage} />
-          <div className={styles.skeletonText}>
-            <div className={styles.skeletonLine} />
-            <div className={styles.skeletonLine} />
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }

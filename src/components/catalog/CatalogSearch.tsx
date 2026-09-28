@@ -48,12 +48,3 @@ export function CatalogSearch({
     </section>
   );
 }
-
-export function CatalogSearchSkeleton() {
-  return (
-    <section aria-label="Catalog controls" className={styles.section}>
-      <div aria-hidden="true" className={styles.skeleton} />
-      <p className={styles.resultCount}>20 RESULTS</p>
-    </section>
-  );
-}

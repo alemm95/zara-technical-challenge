@@ -12,15 +12,25 @@
   --color-danger: #df0000;
   --color-disabled-text: #c2bfbc;
   --color-disabled-bg: #f3f2f2;
-  --skeleton-gradient: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #f8f8f8 50%,
-    #f0f0f0 75%
-  );
   --focus-outline: 2px solid var(--foreground);
   --focus-outline-offset: 3px;
   --header-height: 80px;
+  --page-gutter: 16px;
+  --z-sticky: 9;
+  --z-header: 10;
+  --z-loading: 11;
+}
+
+@media (--tablet) {
+  :root {
+    --page-gutter: 40px;
+  }
+}
+
+@media (--desktop) {
+  :root {
+    --page-gutter: 100px;
+  }
 }
 
 html,
@@ -49,4 +59,49 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.status-page {
+  display: flex;
+  min-height: calc(100svh - var(--header-height));
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  padding: 44px var(--page-gutter);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.status-title {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.status-message {
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.status-action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 32px;
+  border: 1px solid var(--foreground);
+  color: var(--color-inverse);
+  background: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.status-action:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }

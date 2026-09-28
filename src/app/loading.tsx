@@ -1,5 +1,9 @@
-import { CatalogLoading } from "@/components/catalog/CatalogLoading";
+import { LoadingBar } from "@/components/LoadingBar";
 
 export default function Loading() {
-  return <CatalogLoading />;
+  return (
+    <main aria-busy="true">
+      <LoadingBar label="Loading phones" />
+    </main>
+  );
 }

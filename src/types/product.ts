@@ -28,7 +28,8 @@ export interface ProductStorageOption {
   price: number;
 }
 
-export interface ProductDetail extends ProductSummary {
+export interface ProductDetail extends Omit<ProductSummary, "imageUrl"> {
+  imageUrl?: string;
   description: string;
   rating: number;
   specs: ProductSpecs;

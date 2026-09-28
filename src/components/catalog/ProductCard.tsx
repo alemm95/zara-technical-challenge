@@ -1,15 +1,21 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ProductSummary } from "@/types/product";
 import styles from "./ProductCard.module.css";
 
 interface ProductCardProps {
   product: ProductSummary;
   eager?: boolean;
+  sizes?: string;
 }
 
-export function ProductCard({ product, eager = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  eager = false,
+  sizes = "(min-width: 1280px) 20vw, (min-width: 768px) 50vw, 100vw",
+}: ProductCardProps) {
   return (
-    <a
+    <Link
       aria-label={`${product.brand} ${product.name}, ${product.basePrice} EUR`}
       className={styles.cardLink}
       href={`/product/${encodeURIComponent(product.id)}`}
@@ -20,7 +26,7 @@ export function ProductCard({ product, eager = false }: ProductCardProps) {
           className={styles.image}
           fill
           loading={eager ? "eager" : "lazy"}
-          sizes="(min-width: 1280px) 20vw, (min-width: 768px) 50vw, 100vw"
+          sizes={sizes}
           src={product.imageUrl}
         />
       </div>
@@ -31,6 +37,6 @@ export function ProductCard({ product, eager = false }: ProductCardProps) {
         </div>
         <p className={styles.price}>{product.basePrice} EUR</p>
       </div>
-    </a>
+    </Link>
   );
 }

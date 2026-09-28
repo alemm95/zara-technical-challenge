@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ProductSummary } from "@/types/product";
 import styles from "./Catalog.module.css";
-import { CatalogHeader } from "./CatalogHeader";
 import { type CatalogRequestState, CatalogResults } from "./CatalogResults";
 import { CatalogSearch } from "./CatalogSearch";
 
@@ -78,7 +77,6 @@ export function Catalog({ initialProducts, initialError }: CatalogProps) {
 
   return (
     <div className={styles.page}>
-      <CatalogHeader />
       <main className={styles.content}>
         <CatalogSearch
           onQueryChange={setQuery}
